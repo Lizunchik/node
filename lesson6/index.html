@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Socket</title>
+    <script
+      src="https://cdn.socket.io/4.2.0/socket.io.min.js"
+      integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <input id="input" type="text" autofocus />
+    <button id="button">Send</button>
+    <div id="messages"></div>
+    <div id="users"></div>
+    <script>
+      const socket = io("localhost:8085");
+      const messageBlock = document.querySelector("#messages");
+      const button = document.querySelector("#button");
+      const input = document.querySelector("#input");
+      const usersBlock = document.querySelector("#users");
+
+      const users = [];
+      let i = 1;
+
+      button.addEventListener("click", () => {
+        const data = {
+          message: input.value,
+        };
+
+        socket.emit("newMessage", data);
+      });
+      socket.on("connection", (userName)=>{
+          usersBlock.insertAdjacentHTML('beforeend', `<div>${userName} присоеденился к чату</div>`)
+      });
+      socket.on('disconnection', (userName)=>{
+        usersBlock.insertAdjacentHTML('beforeend', `<div>${userName} покинул чат</div>`)
+      });
+      socket.on("connect", () => {
+        console.log("Connected to chat!");
+      });
+
+      socket.on("newMessage", (data, userName) => {
+        input.value = "";
+        messageBlock.insertAdjacentHTML(
+          "beforeend",
+          `<div>${userName}: ${data.message}</div>`
+        );
+      });
+    </script>
+  </body>
+</html>

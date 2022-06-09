@@ -1,10 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello Node JS</title>
-  </head>
-  <body>
-    {{content}}
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>File Manager</title>
+  <script src="https://cdn.socket.io/4.2.0/socket.io.min.js"
+    integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj"
+    crossorigin="anonymous">
+  </script>
+</head>
+
+<body>
+  <div id="users"></div>
+  {{content}}
+  <script>
+    const usersBlock = document.querySelector("#users");
+    const socket = io("localhost:8085");
+    socket.on("connection", (count) => {
+      usersBlock.innerHTML =`<div>количество пользователей: ${count}</div>`;
+    });
+    socket.on("disconnection", (count) => {
+      usersBlock.innerHTML =`<div>количество пользователей: ${count}</div>`;
+    });
+  </script>
+</body>
+
 </html>
